@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<html lang="en"></html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 
@@ -22,20 +23,36 @@
 
 <nav class="navbar">
 
-    <div class="logo">
+    <a th:href="@{/}" class="logo">
         <i class="fa-solid fa-house"></i>
         RealEstate
-    </div>
+    </a>
 
     <ul>
 
-        <li><a th:href="@{/}">Home</a></li>
+        <li>
+            <a th:href="@{/}">Home</a>
+        </li>
 
-        <li><a th:href="@{/properties}">Properties</a></li>
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/properties}">Properties</a>
+        </li>
 
-        <li><a th:href="@{/properties/add}">Add Property</a></li>
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/properties/add}">Add Property</a>
+        </li>
 
-        <li><a th:href="@{/logout}">Logout</a></li>
+        <li sec:authorize="isAnonymous()">
+            <a th:href="@{/login}">Login</a>
+        </li>
+
+        <li sec:authorize="isAnonymous()">
+            <a th:href="@{/signup}">Register</a>
+        </li>
+
+        <li sec:authorize="isAuthenticated()">
+            <a th:href="@{/logout}">Logout</a>
+        </li>
 
     </ul>
 

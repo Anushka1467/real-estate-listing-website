@@ -4,7 +4,6 @@ import com.realestate.listing.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,26 +37,43 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
+
+                        // Public Pages
                         .requestMatchers(
                                 "/",
                                 "/login",
                                 "/signup",
+                                "/register",
                                 "/style.css",
                                 "/js/**",
                                 "/images/**"
                         ).permitAll()
 
+                        // Only authenticated users can access property pages
+                        .requestMatchers("/properties/**").authenticated()
+
                         .anyRequest().authenticated()
                 )
 
                 .formLogin(login -> login
+
                         .loginPage("/login")
+
+                        // Redirect to Home after successful login
                         .defaultSuccessUrl("/", true)
+
                         .permitAll()
                 )
 
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
+
+                        // Redirect to Home after logout
+                        .logoutSuccessUrl("/")
+
+                        .invalidateHttpSession(true)
+
+                        .deleteCookies("JSESSIONID")
+
                         .permitAll()
                 )
 
